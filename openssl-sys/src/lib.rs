@@ -4,6 +4,9 @@
 
 extern crate libc;
 
+#[cfg(target_os = "windows")]
+extern crate gdi32;
+
 use libc::{c_char, c_int, c_long, c_uchar, c_uint, c_ulong, c_void, size_t, FILE};
 use std::mem;
 use std::ptr;
