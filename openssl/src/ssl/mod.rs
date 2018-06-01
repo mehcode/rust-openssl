@@ -69,6 +69,7 @@ use std::io;
 use std::io::prelude::*;
 use std::marker::PhantomData;
 use std::mem::{self, ManuallyDrop};
+use std::net::TcpStream;
 use std::ops::{Deref, DerefMut};
 use std::panic::resume_unwind;
 use std::path::Path;
@@ -3032,15 +3033,9 @@ impl<S: Read + Write> Write for SslStream<S> {
     }
 }
 
-impl SslStream<::std::net::TcpStream> {
-    pub fn try_clone(&self) -> Result<Self, Error> {
-        let stream = self.get_ref().try_clone().map_err(|err| {
-            Error {
-                cause: Some(InnerError::Io(err)),
-                code: ErrorCode::SYSCALL,
-            }
-        })?;
-
+impl SslStream<TcpStream> {
+    pub fn try_clone(&self) -> Result<Self, io::Error> {
+        let stream = self.get_ref().try_clone()?;
         let ssl = self.ssl.as_ptr();
 
         unsafe {
