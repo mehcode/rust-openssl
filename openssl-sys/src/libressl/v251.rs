@@ -23,7 +23,7 @@ pub struct SSL {
     error_code: c_int,
     ctx: *mut ::SSL_CTX,
     verify_result: c_long,
-    references: c_int,
+    pub references: c_int,
     client_version: c_int,
     max_send_fragment: c_uint,
     tlsext_hostname: *mut c_char,

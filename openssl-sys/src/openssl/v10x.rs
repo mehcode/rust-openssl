@@ -396,7 +396,7 @@ pub struct SSL {
     verify_result: c_long,
     ex_data: ::CRYPTO_EX_DATA,
     client_CA: *mut stack_st_X509_NAME,
-    references: c_int,
+    pub references: c_int,
     options: c_ulong,
     mode: c_ulong,
     max_cert_list: c_long,
@@ -715,6 +715,7 @@ pub const SSLEAY_DIR: c_int = 5;
 pub const CRYPTO_LOCK_X509: c_int = 3;
 pub const CRYPTO_LOCK_SSL_CTX: c_int = 12;
 pub const CRYPTO_LOCK_SSL_SESSION: c_int = 14;
+pub const CRYPTO_LOCK_SSL: c_int = 16;
 
 #[cfg(ossl102h)]
 pub const X509_V_ERR_INVALID_CALL: c_int = 65;

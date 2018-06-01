@@ -2418,6 +2418,7 @@ extern "C" {
     pub fn SHA512_Final(md: *mut c_uchar, c: *mut SHA512_CTX) -> c_int;
 
     pub fn SSL_new(ctx: *mut SSL_CTX) -> *mut SSL;
+    pub fn SSL_up_ref(ssl: *mut SSL) -> *mut SSL;
     pub fn SSL_pending(ssl: *const SSL) -> c_int;
     pub fn SSL_free(ssl: *mut SSL);
     pub fn SSL_set_bio(ssl: *mut SSL, rbio: *mut BIO, wbio: *mut BIO);

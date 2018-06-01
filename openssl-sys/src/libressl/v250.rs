@@ -64,7 +64,7 @@ pub struct SSL {
     verify_result: c_long,
     ex_data: ::CRYPTO_EX_DATA,
     client_CA: *mut stack_st_X509_NAME,
-    references: c_int,
+    pub references: c_int,
     options: c_ulong,
     mode: c_ulong,
     max_cert_list: c_long,

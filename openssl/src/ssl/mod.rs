@@ -3032,6 +3032,27 @@ impl<S: Read + Write> Write for SslStream<S> {
     }
 }
 
+impl SslStream<::std::net::TcpStream> {
+    pub fn try_clone(&self) -> Result<Self, Error> {
+        let stream = self.get_ref().try_clone().map_err(|err| {
+            Error {
+                cause: Some(InnerError::Io(err)),
+                code: ErrorCode::SYSCALL,
+            }
+        })?;
+
+        let ssl = self.ssl.as_ptr();
+
+        unsafe {
+            SSL_up_ref(ssl);
+        }
+
+        let ssl = unsafe { Ssl::from_ptr(ssl) };
+
+        Ok(Self::new_base(ssl, stream))
+    }
+}
+
 /// A partially constructed `SslStream`, useful for unusual handshakes.
 pub struct SslStreamBuilder<S> {
     inner: SslStream<S>,
@@ -3259,6 +3280,7 @@ cfg_if! {
     if #[cfg(ossl110)] {
         use ffi::{
             SSL_CTX_up_ref,
+            SSL_up_ref,
             SSL_SESSION_get_master_key, SSL_SESSION_up_ref, SSL_is_server, TLS_method, DTLS_method,
         };
 
@@ -3292,6 +3314,18 @@ cfg_if! {
 
         pub unsafe fn get_new_ssl_idx(f: ffi::CRYPTO_EX_free) -> c_int {
             ffi::SSL_get_ex_new_index(0, ptr::null_mut(), None, None, Some(f))
+        }
+
+        #[allow(bad_style)]
+        pub unsafe fn SSL_up_ref(ssl: *mut ffi::SSL) -> c_int {
+            ffi::CRYPTO_add_lock(
+                &mut (*ssl).references,
+                1,
+                ffi::CRYPTO_LOCK_SSL,
+                "mod.rs\0".as_ptr() as *const _,
+                line!() as c_int,
+            );
+            0
         }
 
         #[allow(bad_style)]

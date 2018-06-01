@@ -371,6 +371,7 @@ pub const SSLEAY_DIR: c_int = 5;
 pub const CRYPTO_LOCK_X509: c_int = 3;
 pub const CRYPTO_LOCK_SSL_CTX: c_int = 12;
 pub const CRYPTO_LOCK_SSL_SESSION: c_int = 14;
+pub const CRYPTO_LOCK_SSL: c_int = 16;
 
 static mut MUTEXES: *mut Vec<Mutex<()>> = 0 as *mut Vec<Mutex<()>>;
 static mut GUARDS: *mut Vec<Option<MutexGuard<'static, ()>>> =

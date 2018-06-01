@@ -333,6 +333,7 @@ extern "C" {
         free_func: Option<::CRYPTO_EX_free>,
     ) -> c_int;
     pub fn X509_up_ref(x: *mut X509) -> c_int;
+    pub fn SSL_up_ref(x: *mut SSL) -> c_int;
     pub fn SSL_CTX_up_ref(x: *mut SSL_CTX) -> c_int;
     pub fn SSL_session_reused(ssl: *mut SSL) -> c_int;
     pub fn SSL_SESSION_get_master_key(
